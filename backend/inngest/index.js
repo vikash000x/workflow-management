@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { Inngest } from "inngest";
 import prisma from "../config/prisma.js";
 
