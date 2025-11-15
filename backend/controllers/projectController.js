@@ -53,7 +53,7 @@ team_members, team_lead, progress, priority
                 membersToAdd.push(member.user.id)
             }
         })
-        console.log("Members to add:", membersToAdd);
+      
          await prisma.projectMember.createMany({
             data: membersToAdd.map(memberId => ({
                 projectId: project.id,

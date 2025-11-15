@@ -6,6 +6,7 @@ import Projects from "./pages/Projects";
 import Team from "./pages/Team";
 import ProjectDetails from "./pages/ProjectDetails";
 import TaskDetails from "./pages/TaskDetails";
+import Footer from "./components/footer";
 
 const App = () => {
     return (
@@ -21,6 +22,7 @@ const App = () => {
                     <Route path="taskDetails" element={<TaskDetails />} />
                 </Route>
             </Routes>
+              <Footer />
         </>
     );
 };

@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Mail, UserPlus } from "lucide-react";
 import { useSelector } from "react-redux";
+import { set } from "date-fns";
+import { useOrganization } from "@clerk/clerk-react";
+import toast from "react-hot-toast";
 
 const InviteMemberDialog = ({ isDialogOpen, setIsDialogOpen }) => {
 
+    const {organization} = useOrganization();
     const currentWorkspace = useSelector((state) => state.workspace?.currentWorkspace || null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
@@ -13,6 +17,20 @@ const InviteMemberDialog = ({ isDialogOpen, setIsDialogOpen }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
+
+        try{
+ console.log("Inviting member:", formData);
+            await  organization.inviteMember({emailAddress : formData.email, role: formData.role})
+            toast.success("Invitation sent successfully");
+            setIsDialogOpen(false);
+
+        }catch(error){
+            console.error("Error sending invitation:", error);
+            toast.error("Failed to send invitation");
+        }finally{
+            setIsSubmitting(false);
+        }   
 
     };
 
