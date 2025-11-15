@@ -55,7 +55,7 @@ const syncUserUpdation = inngest.createFunction(
 )
 
 const syncWorkspaceCreation = inngest.createFunction(
-    { id: "sync-workspace-from-clerk" },
+    { id: "Sync-workspace-from-clerk" },
     { event: "clerk/organization.created" },
     async ({ event }) => {
         const { data } = event;
