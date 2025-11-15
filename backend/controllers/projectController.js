@@ -44,6 +44,8 @@ team_members, team_lead, progress, priority
         }
        })
 
+       console.log("Project created with ID:");
+
        if(team_members?.length > 0){
         const membersToAdd  = [];
         workspace.members.forEach((member) => {
@@ -51,6 +53,7 @@ team_members, team_lead, progress, priority
                 membersToAdd.push(member.user.id)
             }
         })
+        console.log("Members to add:", membersToAdd);
          await prisma.projectMember.createMany({
             data: membersToAdd.map(memberId => ({
                 projectId: project.id,
@@ -58,17 +61,20 @@ team_members, team_lead, progress, priority
             })) 
          })
        }
+
+       console.log("Members added to project");
        
       const projectWithMembers = await prisma.project.findUnique({
         where : {id : project.id},
         include: {
-            members : {include : {use : true}},
+            members : {include : {user : true}},
             tasks : {include : {assignee : true, comments: {include : {
                 user: true
             }}} },
             owner: true
         }
       })
+      console.log("Project with members fetched");
 
       res.json({project : projectWithMembers, message: "project created successfully"   })
 
