@@ -9,14 +9,16 @@ const syncUserCreation = inngest.createFunction(
     {event: 'clerk/user.created'},
     async ({event}) => {
         const {data} = event;
+        console.log("User creation event received:", event);
         await  prisma.user.create({
             data : {
                 id : data.id,
                 email: data.email_addresses[0]?.email_address,
                 name: data?.first_name + " " + data?.last_name,
-                image: data?.image_url
+                image_url: data?.image_url
             }
         })
+        console.log("User created in DB");
     }
 )
 
@@ -46,7 +48,7 @@ const syncUserUpdation = inngest.createFunction(
                
                 email: data.email_addresses[0]?.email_address,
                 name: data?.first_name + " " + data?.last_name,
-                image: data?.image_url
+                image_url: data?.image_url
             }
         })
     }
@@ -56,17 +58,20 @@ const syncWorkspaceCreation = inngest.createFunction(
     {id : 'Sync-workspace-from-clerk'},
     {event: 'clerk/organization.created'},
     async ({event}) => {
+
+        console.log("Workspace creation event received:");
         const {data} = event;
+        console.log("Workspace data:", data);
         await  prisma.workspace.create({    
             data : {
                 id : data.id,
                 name: data.name,    
                 slug: data.slug,
                 ownerId: data.created_by,
-                image: data.image_url,
+                image_url: data.image_url,
             }
         })
-
+              console.log("Workspace created in DB");
         await prisma.workspaceMember.create({
             data: {
                 userId: data.created_by,    
@@ -81,13 +86,14 @@ const syncWorkspaceUpdation = inngest.createFunction(
     {id : 'update-workspace-from-clerk'},
     {event: 'clerk/organization.updated'},
     async ({event}) => {
+        console.log("Workspace updation event received:");
         const {data} = event;
         await  prisma.workspace.update({
           where: { id: data.id },   
             data : {
                 name: data.name,    
                 slug: data.slug,
-                image: data.image_url,
+                image_url: data.image_url,
             }
         })
     }
@@ -108,7 +114,7 @@ const syncWorkspaceDeletion = inngest.createFunction(
 
 const syncWorkspaceMemberCreation = inngest.createFunction(
     {id : 'Sync-workspace-member-from-clerk'},
-    {event: 'clerk/organization_member.created'},
+    {event: 'clerk/organization_member.accepted'},
     async ({event}) => {
         const {data} = event;
         await  prisma.workspaceMember.create({  

@@ -10,6 +10,7 @@ import TaskDetails from "./pages/TaskDetails";
 const App = () => {
     return (
         <>
+        
             <Toaster />
             <Routes>
                 <Route path="/" element={<Layout />}>
