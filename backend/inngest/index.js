@@ -55,32 +55,44 @@ const syncUserUpdation = inngest.createFunction(
 )
 
 const syncWorkspaceCreation = inngest.createFunction(
-    {id : 'Sync-workspace-from-clerk'},
-    {event: 'clerk/organization.created'},
-    async ({event}) => {
+    { id: "sync-workspace-from-clerk" },
+    { event: "clerk/organization.created" },
+    async ({ event }) => {
+        const { data } = event;
 
-        console.log("Workspace creation event received:");
-        const {data} = event;
-        console.log("Workspace data:", data);
-        await  prisma.workspace.create({    
-            data : {
-                id : data.id,
-                name: data.name,    
+        // SAFETY: Ensure owner exists
+        await prisma.user.upsert({
+            where: { id: data.created_by },
+            update: {},
+            create: {
+                id: data.created_by,
+                email: "",
+                name: "",
+                image: ""
+            }
+        });
+
+        await prisma.workspace.create({
+            data: {
+                id: data.id,
+                name: data.name,
                 slug: data.slug,
                 ownerId: data.created_by,
-                image_url: data.image_url,
+                image_url: data.image_url
             }
-        })
-              console.log("Workspace created in DB");
+        });
+
         await prisma.workspaceMember.create({
             data: {
-                userId: data.created_by,    
+                userId: data.created_by,
                 workspaceId: data.id,
-                role:"ADMIN"
+                role: "ADMIN"
             }
-        })
+        });
+
+        console.log("Workspace created in DB");
     }
-)
+);
 
 const syncWorkspaceUpdation = inngest.createFunction(
     {id : 'update-workspace-from-clerk'},
