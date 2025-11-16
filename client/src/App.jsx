@@ -9,6 +9,10 @@ import TaskDetails from "./pages/TaskDetails";
 import Footer from "./components/footer";
 
 const App = () => {
+
+
+
+
     return (
         <>
         

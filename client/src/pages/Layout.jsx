@@ -14,11 +14,17 @@ const Layout = () => {
 
     const {user, isLoaded, isSignedIn} = useUser();
 
+
+    
     const {getToken} = useAuth();
     // Initial load of theme
     useEffect(() => {
-        dispatch(loadTheme())
+       dispatch(loadTheme());
+  
     }, [])
+    console.log("dark on html:", document.documentElement.className)
+console.log("dark on body:", document.body.className)
+
 
     useEffect(()=> {
         if(isLoaded && user && workspaces.length === 0){
@@ -27,20 +33,7 @@ const Layout = () => {
         } }, [isLoaded, user])
 
 
-//    useEffect(()=> {
-//     const load = async()=> {
-//         if(!isLoaded || !isSignedIn) return;
 
-//         const token = await getToken();
-
-//         if(!token){
-//             console.log("token is missing");
-//             return;
-//         }
-//         dispatch(fetchWorkspaces({token}));
-//     }
-//     load();
-//    }, [isLoaded, isSignedIn])
   
  if(!user){
         return (
@@ -68,6 +61,7 @@ const Layout = () => {
 
     return (
         <div className="flex bg-white dark:bg-zinc-950 text-gray-900 dark:text-slate-100">
+         
             <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
             <div className="flex-1 flex flex-col h-screen">
                 <Navbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
